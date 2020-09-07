@@ -5,6 +5,8 @@ from vk_api.bot_longpoll import VkBotLongPoll
 
 import sqlite3
 
+import requests
+
 
 class Bot:
     def __init__(self):
@@ -54,8 +56,8 @@ class Bot:
     def cigarettes(self, peer_id):
         with sqlite3.connect('database.db') as conn:
             curs = conn.cursor()
-            curs.execute(f'''SELECT name, link FROM Cigarettes WHERE
-             (Class, Button)= ("{self.category}", "{self.button}")''')
+            curs.execute(f'''SELECT name, link FROM Cigarettes WHERE 
+            (Class, Button) = ("{self.category}", "{self.button}")''')
             data = curs.fetchall()
         if data:
             item = data[randint(0, len(data) - 1)]
@@ -81,8 +83,8 @@ class Bot:
     def beer(self, peer_id):
         with sqlite3.connect('database.db') as conn:
             curs = conn.cursor()
-            curs.execute(f'''SELECT Name, Link FROM Beer 
-             (Class, Classic)= ("{self.category}", "{self.classic}")''')
+            curs.execute(f'''SELECT Name, Link FROM Beer WHERE 
+            (Class, Classic) = ("{self.category}", "{self.classic}")''')
             data = curs.fetchall()
         if data:
             item = data[randint(0, len(data) - 1)]
@@ -273,8 +275,12 @@ class Bot:
                             self.beer(peer_id)
                         elif self.product == 'energy_drinks':
                             self.energy_drinks(peer_id)
-            except:
+            except KeyError:
                 pass
+            except requests.exceptions.ReadTimeout as error:
+                self.api.messages.send(peer_id=447828812,
+                                       random_id=randint(0, 1024),
+                                       message=error)
 
 
 if __name__ == "__main__":
