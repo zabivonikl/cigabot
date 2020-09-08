@@ -10,7 +10,7 @@ import requests
 
 class Bot:
     def __init__(self):
-        token = "518eddc8406855aa293cd19af4bbd96a66620d353ecd55d84995120b4ef494b1b2b8c87745b5c654fbd05"
+        token = ""
         self.session = vk_api.VkApi(token=token, client_secret=token)
         self.api = self.session.get_api()
         self.button = False
